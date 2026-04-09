@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alexandru Arbanas — Data Analyst</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --card: #16161f;
+    --border: #2a2a3a;
+    --accent: #4f8ef7;
+    --accent2: #a78bfa;
+    --text: #e8e8f0;
+    --muted: #7070a0;
+    --tag-bg: #1a1a2e;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* Grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(79,142,247,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(79,142,247,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Glow orbs */
+  .orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(120px);
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.18;
+  }
+  .orb-1 { width: 600px; height: 600px; background: #4f8ef7; top: -200px; right: -100px; }
+  .orb-2 { width: 400px; height: 400px; background: #a78bfa; bottom: 20%; left: -100px; }
+
+  /* Nav */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 20px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(10,10,15,0.8);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.1rem;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .nav-logo span { color: var(--accent); }
+
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 40px;
+  }
+
+  nav ul a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.05em;
+    transition: color 0.2s;
+  }
+
+  nav ul a:hover { color: var(--text); }
+
+  /* Hero */
+  .hero {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 120px 60px 80px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .hero-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.2s;
+  }
+
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(3rem, 7vw, 6rem);
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+    margin-bottom: 32px;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.4s;
+  }
+
+  .hero h1 .line2 {
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(232,232,240,0.3);
+  }
+
+  .hero h1 .accent { color: var(--accent); }
+
+  .hero-desc {
+    max-width: 560px;
+    color: var(--muted);
+    font-size: 1.05rem;
+    margin-bottom: 48px;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.6s;
+  }
+
+  .hero-links {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.8s;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.82rem;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    transition: all 0.2s;
+    cursor: pointer;
+    border: none;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  .btn-primary:hover {
+    background: #6ba0ff;
+    transform: translateY(-1px);
+  }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+
+  .btn-outline:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateY(-1px);
+  }
+
+  /* Stats bar */
+  .stats-bar {
+    position: relative;
+    z-index: 1;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 32px 60px;
+  }
+
+  .stats-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 2rem;
+    color: var(--accent);
+    display: block;
+  }
+
+  .stat-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* Sections */
+  section {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 100px 60px;
+  }
+
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: clamp(1.8rem, 3vw, 2.8rem);
+    letter-spacing: -0.02em;
+    margin-bottom: 60px;
+    line-height: 1.1;
+  }
+
+  /* Projects */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+    gap: 24px;
+  }
+
+  .project-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 40px;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s;
+    display: block;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .project-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(79,142,247,0.05), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .project-card:hover {
+    border-color: rgba(79,142,247,0.4);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  }
+
+  .project-card:hover::before { opacity: 1; }
+
+  .project-card.featured {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: center;
+  }
+
+  .project-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    background: rgba(79,142,247,0.15);
+    color: var(--accent);
+    border-radius: 4px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .project-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1.5rem;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+
+  .project-desc {
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.7;
+    margin-bottom: 24px;
+  }
+
+  .project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 28px;
+  }
+
+  .tag {
+    padding: 4px 12px;
+    background: var(--tag-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
+  .project-links {
+    display: flex;
+    gap: 12px;
+  }
+
+  /* Findings */
+  .findings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+  }
+
+  .finding-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 28px;
+    transition: border-color 0.2s;
+  }
+
+  .finding-card:hover { border-color: rgba(167,139,250,0.4); }
+
+  .finding-num {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 2.2rem;
+    color: var(--accent2);
+    display: block;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .finding-label {
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* Skills */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+  }
+
+  .skill-group {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+  }
+
+  .skill-group-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+
+  .skill-group ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .skill-group ul li {
+    font-size: 0.9rem;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .skill-group ul li::before {
+    content: '▸';
+    color: var(--accent);
+    font-size: 0.7rem;
+  }
+
+  /* Contact */
+  .contact-section {
+    text-align: center;
+  }
+
+  .contact-section .section-title { margin-bottom: 16px; }
+
+  .contact-desc {
+    color: var(--muted);
+    margin-bottom: 40px;
+    font-size: 1rem;
+  }
+
+  /* Footer */
+  footer {
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid var(--border);
+    padding: 32px 60px;
+    text-align: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
+  /* Divider */
+  .divider {
+    position: relative;
+    z-index: 1;
+    height: 1px;
+    background: var(--border);
+    max-width: 1200px;
+    margin: 0 auto 0;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 16px 24px; }
+    nav ul { display: none; }
+    .hero { padding: 100px 24px 60px; }
+    section { padding: 60px 24px; }
+    .stats-bar { padding: 24px; }
+    .stats-inner { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+    .projects-grid { grid-template-columns: 1fr; }
+    .project-card.featured { grid-template-columns: 1fr; }
+    footer { padding: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<!-- Nav -->
+<nav>
+  <a href="#" class="nav-logo">AA<span>.</span></a>
+  <ul>
+    <li><a href="#projects">projects</a></li>
+    <li><a href="#findings">findings</a></li>
+    <li><a href="#skills">skills</a></li>
+    <li><a href="#contact">contact</a></li>
+  </ul>
+</nav>
+
+<!-- Hero -->
+<div class="hero">
+  <p class="hero-label">// data analyst portfolio</p>
+  <h1>
+    Alexandru<br>
+    <span class="line2">Arbanas</span><span class="accent">.</span>
+  </h1>
+  <p class="hero-desc">
+    Junior data analyst turning raw datasets into clear, actionable insights. 
+    Focused on SQL, Power BI, and telling stories with data that actually matter.
+  </p>
+  <div class="hero-links">
+    <a href="https://www.linkedin.com/in/arbanas-alexandru-81070b224/" target="_blank" class="btn btn-primary">
+      ↗ LinkedIn
+    </a>
+    <a href="https://github.com/Cancoon14" target="_blank" class="btn btn-outline">
+      ⌥ GitHub
+    </a>
+    <a href="#projects" class="btn btn-outline">
+      ↓ View Work
+    </a>
+  </div>
+</div>
+
+<!-- Stats -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat">
+      <span class="stat-num">35</span>
+      <span class="stat-label">Countries Analysed</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">10</span>
+      <span class="stat-label">Years of Data</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">2</span>
+      <span class="stat-label">Portfolio Projects</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">5</span>
+      <span class="stat-label">Dashboard Pages</span>
+    </div>
+  </div>
+</div>
+
+<!-- Projects -->
+<section id="projects">
+  <p class="section-label">// 01 — work</p>
+  <h2 class="section-title">Portfolio Projects</h2>
+
+  <div class="projects-grid">
+
+    <!-- Featured project -->
+    <div class="project-card featured">
+      <div>
+        <span class="project-badge">⭐ Featured Project</span>
+        <h3 class="project-title">European Labour Market Analysis</h3>
+        <p class="project-desc">
+          A full end-to-end SQL analysis of employment and unemployment trends across 35 European 
+          countries from 2015 to 2024. Covers data cleaning, transformation, and 5 analytical 
+          questions including gender employment gaps, COVID-19 impact, recovery speed, and youth 
+          vs senior unemployment — visualised in an interactive Power BI dashboard.
+        </p>
+        <div class="project-tags">
+          <span class="tag">SQL Server</span>
+          <span class="tag">Power BI</span>
+          <span class="tag">CTEs</span>
+          <span class="tag">Window Functions</span>
+          <span class="tag">Data Cleaning</span>
+          <span class="tag">UNPIVOT</span>
+        </div>
+        <div class="project-links">
+          <a href="https://github.com/Cancoon14/European-Employment-Unemployment-Analysis-" target="_blank" class="btn btn-primary">
+            ↗ View on GitHub
+          </a>
+          <a href="https://github.com/Cancoon14/European-Employment-Unemployment-Analysis-/blob/main/Dashboard.pdf" target="_blank" class="btn btn-outline">
+            ↓ Dashboard PDF
+          </a>
+        </div>
+      </div>
+      <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 32px; font-family: 'DM Mono', monospace; font-size: 0.78rem; color: var(--muted); line-height: 2;">
+        <span style="color: var(--accent);">-- Key insight #1</span><br>
+        Turkey gender gap: <span style="color: #f9c74f;">41pp</span> vs Austria: <span style="color: #90be6d;">4pp</span><br><br>
+        <span style="color: var(--accent);">-- Key insight #2</span><br>
+        Montenegro COVID drop: <span style="color: #f94144;">-5.8pp</span> in 2020<br><br>
+        <span style="color: var(--accent);">-- Key insight #3</span><br>
+        Youth unemp <span style="color: #f9c74f;">4x</span> higher than senior<br>in North Macedonia &amp; Spain<br><br>
+        <span style="color: var(--accent);">-- Key insight #4</span><br>
+        <span style="color: #90be6d;">100%</span> of countries recovered<br>to pre-COVID levels by 2024
+      </div>
+    </div>
+
+    <!-- Second project -->
+    <div class="project-card">
+      <span class="project-badge">Project 02</span>
+      <h3 class="project-title">eJobs Data Analyst Job Scraper</h3>
+      <p class="project-desc">
+        A Python-based web scraping project that extracts data analyst job listings from eJobs.ro, 
+        Romania's leading job platform. Collects, cleans and analyses job market data to identify 
+        trends in required skills, salaries and locations for data roles.
+      </p>
+      <div class="project-tags">
+        <span class="tag">Python</span>
+        <span class="tag">Jupyter Notebook</span>
+        <span class="tag">Web Scraping</span>
+        <span class="tag">Data Cleaning</span>
+      </div>
+      <div class="project-links">
+        <a href="https://github.com/Cancoon14/data-analyst-job-scraper-portfolio" target="_blank" class="btn btn-primary">
+          ↗ View on GitHub
+        </a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Key Findings -->
+<section id="findings">
+  <p class="section-label">// 02 — insights</p>
+  <h2 class="section-title">Key Findings</h2>
+
+  <div class="findings-grid">
+    <div class="finding-card">
+      <span class="finding-num">41pp</span>
+      <p class="finding-label">Gender employment gap in Turkey (prime age 25-54) — the largest in Europe, more than 8x Austria's gap of 4pp</p>
+    </div>
+    <div class="finding-card">
+      <span class="finding-num">-5.8pp</span>
+      <p class="finding-label">Montenegro's employment drop during COVID-19 in 2020 — the steepest decline across all 35 countries</p>
+    </div>
+    <div class="finding-card">
+      <span class="finding-num">4×</span>
+      <p class="finding-label">Youth unemployment is up to 4x higher than senior unemployment in North Macedonia and Spain in 2024</p>
+    </div>
+    <div class="finding-card">
+      <span class="finding-num">100%</span>
+      <p class="finding-label">All analysed countries recovered to or exceeded their pre-COVID employment levels by 2024</p>
+    </div>
+    <div class="finding-card">
+      <span class="finding-num">85%</span>
+      <p class="finding-label">Iceland leads Europe with an 85.2% employment rate and just 3.65% unemployment in 2024</p>
+    </div>
+    <div class="finding-card">
+      <span class="finding-num">1.8pp</span>
+      <p class="finding-label">Finland has the smallest gender employment gap in Europe — virtually equal participation between men and women</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Skills -->
+<section id="skills">
+  <p class="section-label">// 03 — stack</p>
+  <h2 class="section-title">Skills & Tools</h2>
+
+  <div class="skills-grid">
+    <div class="skill-group">
+      <p class="skill-group-title">SQL</p>
+      <ul>
+        <li>SQL Server / SSMS</li>
+        <li>CTEs & Window Functions</li>
+        <li>Data Cleaning</li>
+        <li>UNPIVOT / Transform</li>
+        <li>Joins & Aggregation</li>
+      </ul>
+    </div>
+    <div class="skill-group">
+      <p class="skill-group-title">Visualisation</p>
+      <ul>
+        <li>Power BI</li>
+        <li>DAX Measures</li>
+        <li>Interactive Dashboards</li>
+        <li>Conditional Formatting</li>
+        <li>Slicers & Filters</li>
+      </ul>
+    </div>
+    <div class="skill-group">
+      <p class="skill-group-title">Python</p>
+      <ul>
+        <li>Pandas</li>
+        <li>Jupyter Notebook</li>
+        <li>Web Scraping</li>
+        <li>Data Manipulation</li>
+      </ul>
+    </div>
+    <div class="skill-group">
+      <p class="skill-group-title">Other</p>
+      <ul>
+        <li>GitHub</li>
+        <li>Excel</li>
+        <li>Data Storytelling</li>
+        <li>Documentation</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Contact -->
+<section id="contact" class="contact-section">
+  <p class="section-label">// 04 — contact</p>
+  <h2 class="section-title">Get In Touch</h2>
+  <p class="contact-desc">Open to junior data analyst roles. Feel free to reach out on LinkedIn or explore my work on GitHub.</p>
+  <div class="hero-links" style="justify-content: center;">
+    <a href="https://www.linkedin.com/in/arbanas-alexandru-81070b224/" target="_blank" class="btn btn-primary">
+      ↗ LinkedIn
+    </a>
+    <a href="https://github.com/Cancoon14" target="_blank" class="btn btn-outline">
+      ⌥ GitHub
+    </a>
+  </div>
+</section>
+
+<footer>
+  <p>© 2025 Alexandru Arbanas — Built with HTML & hosted on GitHub Pages</p>
+</footer>
+
+</body>
+</html>
